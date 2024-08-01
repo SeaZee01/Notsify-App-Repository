@@ -2,7 +2,7 @@
 //  Notsify_AppApp.swift
 //  Notsify App
 //
-//  Created by MacBook Air on 5/07/24.
+//  Created by Kyle Akers and Daniel Meyer on 5/07/24.
 //
 
 import SwiftUI

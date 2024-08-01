@@ -11,16 +11,26 @@ struct ContentView: View {
         ScrollView(showsIndicators: true) {
             GeometryReader { geometry in
                 VStack() {
-                    //side bar background
+                    // Creating the side bar for the Home Page
+                    // Defining object
                     Rectangle()
-                        .frame(width:250, height: 2000)
+                        // Defining object size
+                        .frame(width:235, height: 2000)
+                        // Defining object colour
                         .foregroundColor(Color("NormOrange"))
+                        // Defining object position
                         .position(x: -1, y: 0)
+                    
+                    // Creating the top bar for the Home Page
+                    // Defining object
                     Rectangle()
-                        .frame(width: geometry.size.width * 2, height: 175)
+                        // Defining object size
+                        .frame(width: geometry.size.width * 2, height: 600)
+                        // Defining object colour
                         .foregroundColor(Color("DarkOrange"))
-                        .position(x: 0, y: 0)
-                }
+                        // Defining object position
+                        .position(x: 0, y: -175)
+                    }
             }
         }
     }
