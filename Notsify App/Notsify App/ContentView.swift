@@ -15,7 +15,7 @@ struct ContentView: View {
                     // Defining object
                     Rectangle()
                         // Defining object size
-                        .frame(width:235, height: 2000)
+                        .frame(width:235, height: 6000)
                         // Defining object colour
                         .foregroundColor(Color("NormOrange"))
                         // Defining object position
@@ -30,7 +30,31 @@ struct ContentView: View {
                         .foregroundColor(Color("DarkOrange"))
                         // Defining object position
                         .position(x: 0, y: -175)
-                    }
+                   
+                    // Inserting the image that serves as our application title.
+                    Image("TitleSet")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width:425, height: 425)
+                        .position(x: 650, y: 50)
+                    
+                    Circle()
+                        // Creating object border
+                        .strokeBorder(Color.black, lineWidth: 1)
+                        // Defining object colour
+                        .background(Circle().fill(Color.white))
+                        // Defining object size
+                        .frame(width: 100, height: 100)
+                        // Defining object position
+                        .position(x: 70, y: 40)
+                    
+                    // Inserting our logo image.
+                    Image("LogoSet")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width:110, height: 110)
+                        .position(x: 70, y: 28)
+                }
             }
         }
     }
