@@ -6,6 +6,68 @@
 
 // Importing the Swift library
 import SwiftUI
+//Libary for manipulating the .txt files
+import Cocoa
+extension String{
+    //get the filename from a string
+    func fileName() -> String{
+        //finds the file name by deleting the file extension attached
+        return URL(fileURLWithPath: self).deletingPathExtension().lastPathComponent
+    }
+    //get the file type from the string
+    func fileType() -> String{
+        //finds the file type by specifying for the file extension
+        return URL(fileURLWithPath: self).pathExtension
+    }
+}
+
+//function which reads the text file
+func readingFile(inputFile: String) -> String{
+    //breaking up the file into two components
+    //the file name
+    let nameFile =  inputFile.fileName()
+    //the file type
+    let typeFile = inputFile.fileType()
+    //getting the location of the file
+    let filelocationURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+    
+    let readFile = filelocationURL.appendingPathComponent(nameFile).appendingPathExtension(typeFile)
+    
+    //reading the data on the text file
+    do {
+        let savedInfo = try String(contentsOf: readFile)
+        return savedInfo
+        //if the folder doesn't exist
+    } catch {
+        //if the file doesn't exist then return the fact that it doesn't exiat
+        return error.localizedDescription
+    }
+}
+
+func writeFile(Filename: String, Data: String){
+    //breaking up the file into two components
+    //the file name
+    let nameFile =  Filename.fileName()
+    //the file type
+    let typeFile = Filename.fileType()
+    //getting the location of the file
+    let filelocationURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+    let Filename = filelocationURL.appendingPathComponent(nameFile).appendingPathExtension(typeFile)
+    
+    //saving the data
+    guard let data = Data.data(using: .utf8) else{
+        print("can't convert string to data")
+        return
+    }
+    
+    do{
+        try data.write(to: Filename)
+        print("data written: \(data)")
+    } catch{
+        print(error.localizedDescription)
+    }
+}
+
 
 struct ContentView: View {
     // Defining the current page variable
@@ -208,6 +270,8 @@ private extension ContentView{
             // Defining button actions to change page
             Button(action: {
                 currentPage = 0
+                let myData = readingFile(inputFile: "Textfile.txt")
+                print(myData)
             }) {
                 // Adding and resizing the icon that the button will present as
                 Image("HomeIcon")
@@ -233,7 +297,6 @@ private extension ContentView{
             
             // Defining button actions to change page
             Button(action: {
-                print(geometry.size.width)
                 currentPage = 1
             }) {
                 // Adding and resizing the icon that the button will present as
@@ -308,3 +371,5 @@ private extension ContentView{
         }
     }
 }
+
+
