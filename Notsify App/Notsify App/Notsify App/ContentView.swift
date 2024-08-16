@@ -21,7 +21,7 @@ extension String{
     }
 }
 
-//function which reads the text file and is recycable for more efficency when codding.
+//function which reads the text file
 func readingFile(inputFile: String) -> String{
     //breaking up the file into two components
     //the file name
@@ -43,7 +43,7 @@ func readingFile(inputFile: String) -> String{
         return error.localizedDescription
     }
 }
-//function which writes a text file and can create files. Taking 2 parameters, The file name and data on the text file.
+
 func writeFile(Filename: String, Data: String){
     //breaking up the file into two components
     //the file name
@@ -59,7 +59,7 @@ func writeFile(Filename: String, Data: String){
         print("can't convert string to data")
         return
     }
-    //printing to the console whether the data transmision was sucsesfull and if so how many bytes, else an error which specifies why it failed
+    
     do{
         try data.write(to: Filename)
         print("data written: \(data)")
@@ -68,30 +68,12 @@ func writeFile(Filename: String, Data: String){
     }
 }
 
-//function which allows people to delete files
-func deleteFile(_ fileToDelete: String){
-    //breaking up the filename and extension
-    //the file name
-    let nameFile =  fileToDelete.fileName()
-    //the file type
-    let typeFile = fileToDelete.fileType()
-    //getting the location of the file
-    let filelocationURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-    let Filename = filelocationURL.appendingPathComponent(nameFile).appendingPathExtension(typeFile)
-    
-    do {
-        try FileManager.default.removeItem(at: Filename)
-    }catch{
-        print(error.localizedDescription)
-    }
-}
 
-//Main Content View
 struct ContentView: View {
     // Defining the current page variable
     @State var currentPage = 0
     // defining the variable for the general notes string
-    @State var GeneralNoteText: String = readingFile(inputFile: "GeneralNotesText")
+    @State private var GeneralNoteText: String = ""
     var body: some View {
         ScrollView(showsIndicators: true) {
             // Switching case statements to dictate the application page
@@ -103,8 +85,7 @@ struct ContentView: View {
             case 2:
                 STICKYNOTEPAGE(currentPage: $currentPage)
             case 3:
-                MINDMAP(currentPage: $currentPage)
-                MindMapButtons
+                Text("Mind map")
             default:
                 HOMEPAGE(currentPage: $currentPage)
                 HomePageButtons
@@ -112,13 +93,13 @@ struct ContentView: View {
         }
     }
 }
-
 // Creating the Home page for the application
 struct HOMEPAGE: View{
     @Binding var currentPage: Int
     var body: some View{
         GeometryReader { geometry in
             VStack() {
+
                 // Creating the side bar for the Home Page
                 // Defining the object
                 Rectangle()
@@ -249,91 +230,6 @@ struct GENERALNOTESPAGE: View{
                     // Changing the position of the button
                     .position(x: geometry.size.width*0.97, y: geometry.size.height*64)
                 
-                // Defining button actions to save as a new file (Can't be placed in the generalNotesButtons because it need access to the GeneralNotesText Variable which is a binding var that can't be used in extension pages)
-                Button(action: {
-                    writeFile(Filename: "GeneralNotesText", Data: GeneralNoteText)
-                    let myData = readingFile(inputFile: "GeneralNotesText")
-                    print(myData)
-                }) {
-                    // Adding and resizing the icon that the button will present as
-                    Text("Save")
-                        // Resizing the icon image
-                        .frame(width: 77, height: 77)
-                        .foregroundColor(.white)
-                        .background(Color("DarkOrange"))
-                        .cornerRadius(8)
-                    }
-                    // Styling and repositioning the button
-                    .buttonStyle(PlainButtonStyle())
-                    .position(x:58, y:267)
-            }
-        }
-    }
-}
-
-// Creating the Mind Map for the application
-struct MINDMAP: View{
-    @Binding var currentPage: Int
-    var body: some View{
-        GeometryReader { geometry in
-            VStack() {
-                // Creating the side bar for the Home Page
-                // Defining the object
-                Rectangle()
-                // Defining the object size
-                    .frame(width:235, height: 6000)
-                // Defining the object colour
-                    .foregroundColor(Color("NormOrange"))
-                // Defining the object position
-                    .position(x: -1, y: 0)
-                
-                // Creating the top bar for the Home Page
-                // Defining the object
-                Rectangle()
-                // Defining the object size
-                    .frame(width: geometry.size.width * 2, height: 600)
-                // Defining the object colour
-                    .foregroundColor(Color("DarkOrange"))
-                // Defining the object position
-                    .position(x: 0, y: -175)
-
-                // Inserting the image that serves as our application title.
-                Image("TitleSet")
-                    // Resizing the image
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width:425, height: 425)
-                    // Changing the image position
-                    .position(x: geometry.size.width/2, y: 50)
-                
-                Circle()
-                // Creating the object border
-                    .strokeBorder(Color.black, lineWidth: 1)
-                // Defining the object colour
-                    .background(Circle().fill(Color.white))
-                // Defining the object size
-                    .frame(width: 100, height: 100)
-                // Defining the object position
-                    .position(x: 70, y: 40)
-                
-                // Inserting our logo image
-                Image("LogoSet")
-                    // Resizing the image
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width:130, height: 130)
-                    // Changing the image position
-                    .position(x: 67.5, y: 47)
-                // Creating the help button
-                // Labelling the button with the link to our website
-                Link("Help", destination: URL(string: "https://www.canva.com/design/DAGNBe5W3jc/KvojK8gN0hCMNO4tXyXDNw/view?utm_content=DAGNBe5W3jc&utm_campaign=designshare&utm_medium=link&utm_source=editor#1")!)
-                    // Changing the colour and shape of the button
-                    .padding()
-                    .background(Color("NormOrange"))
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-                    // Changing the position of the button
-                    .position(x: geometry.size.width*0.97, y: geometry.size.height*64)
             }
         }
     }
@@ -350,7 +246,6 @@ struct STICKYNOTEPAGE: View{
         }
     }
 }
-//
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
@@ -370,11 +265,13 @@ private extension ContentView{
             // Defining the object colour
                 .foregroundColor(Color("DarkOrange"))
             // Defining the object position
-                .position(x:58, y:168)
+                .position(x:58, y:175)
             
             // Defining button actions to change page
             Button(action: {
                 currentPage = 0
+                let myData = readingFile(inputFile: "Textfile.txt")
+                print(myData)
             }) {
                 // Adding and resizing the icon that the button will present as
                 Image("HomeIcon")
@@ -396,7 +293,7 @@ private extension ContentView{
             // Defining the object colour
                 .foregroundColor(Color("DarkOrange"))
             // Defining the object position
-                .position(x:58, y:267)
+                .position(x:58, y:275)
             
             // Defining button actions to change page
             Button(action: {
@@ -413,23 +310,13 @@ private extension ContentView{
                 .buttonStyle(PlainButtonStyle())
                 .position(x:58, y:267)
             
-            // Creating the third button for the Home page
-            // Defining the object for button background
-            Rectangle()
-                .cornerRadius(15)
-            // Defining the object size
-                .frame(width: 90, height: 90)
-            // Defining the object colour
-                .foregroundColor(Color("DarkOrange"))
-            // Defining the object position
-                .position(x:58, y:366)
             
             // Defining button actions to change page
             Button(action: {
                 currentPage = 2
             }) {
                 // Adding and resizing the icon that the button will present as
-                Image("StickiesIcon")
+                Image("HomeIcon")
                     // Resizing the icon image
                     .resizable()
                     .scaledToFit()
@@ -438,33 +325,6 @@ private extension ContentView{
                 // Styling and repositioning the button
                 .buttonStyle(PlainButtonStyle())
                 .position(x:58, y:366)
-            
-            // Creating the fourth button for the Home page
-            // Defining the object for button background
-            Rectangle()
-                .cornerRadius(15)
-            // Defining the object size
-                .frame(width: 90, height: 90)
-            // Defining the object colour
-                .foregroundColor(Color("DarkOrange"))
-            // Defining the object position
-                .position(x:58, y:465)
-            
-            // Defining button actions to change page
-            Button(action: {
-                currentPage = 3
-            }) {
-                // Adding and resizing the icon that the button will present as
-                Image("MapIcon")
-                    // Resizing the icon image
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 77, height: 77)
-                }
-                // Styling and repositioning the button
-                .buttonStyle(PlainButtonStyle())
-                .position(x:58, y:465)
-            
         }
     }
 }
@@ -482,40 +342,7 @@ private extension ContentView{
             // Defining the object colour
                 .foregroundColor(Color("DarkOrange"))
             // Defining the object position
-                .position(x:58, y:168)
-            
-            // Defining button actions to change page
-            Button(action: {
-                currentPage = 0
-            }) {
-                // Adding and resizing the icon that the button will present as
-                Image("HomeIcon")
-                    // Resizing the icon image
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 77, height: 77)
-                }
-                // Styling and repositioning the button
-                .buttonStyle(PlainButtonStyle())
-                .position(x:58, y:168)
-        }
-    }
-}
-
-//MindMap page buttons extension preview
-private extension ContentView{
-    var MindMapButtons: some View{
-        GeometryReader { geometry in
-            // Button to go to home page
-            // Defining the object for button background
-            Rectangle()
-                .cornerRadius(15)
-            // Defining the object size
-                .frame(width: 90, height: 90)
-            // Defining the object colour
-                .foregroundColor(Color("DarkOrange"))
-            // Defining the object position
-                .position(x:58, y:168)
+                .position(x:58, y:175)
             
             // Defining button actions to change page
             Button(action: {
@@ -544,3 +371,5 @@ private extension ContentView{
         }
     }
 }
+
+
