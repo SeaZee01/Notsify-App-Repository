@@ -6,60 +6,60 @@
 
 // Importing the Swift library
 import SwiftUI
-//Libary for manipulating the .txt files
+// Importing the libary for manipulating .txt files
 import Cocoa
 extension String{
-    //get the filename from a string
+    // Getting the filename from a string
     func fileName() -> String{
-        //finds the file name by deleting the file extension attached
+        // Finding the file name by deleting the file extension attached
         return URL(fileURLWithPath: self).deletingPathExtension().lastPathComponent
     }
-    //get the file type from the string
+    // Getting the file type from the string
     func fileType() -> String{
-        //finds the file type by specifying for the file extension
+        // Finding the file type by specifying for the file extension
         return URL(fileURLWithPath: self).pathExtension
     }
 }
 
-//function which reads the text file and is recycable for more efficency when codding.
+// Creating a function which reads the text file and is recyclable for more efficency
 func readingFile(inputFile: String) -> String{
-    //breaking up the file into two components
-    //the file name
+    // Breaking up the file into two components
+    // The file name
     let nameFile =  inputFile.fileName()
-    //the file type
+    // The file type
     let typeFile = inputFile.fileType()
-    //getting the location of the file
+    // Getting the location of the file
     let filelocationURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
     
     let readFile = filelocationURL.appendingPathComponent(nameFile).appendingPathExtension(typeFile)
     
-    //reading the data on the text file
+    // Reading the data on the .txt file
     do {
         let savedInfo = try String(contentsOf: readFile)
         return savedInfo
-        //if the folder doesn't exist
+        // Defining the process if the folder doesn't exist
     } catch {
-        //if the file doesn't exist then return the fact that it doesn't exiat
+        // If the file doesn't exist then return the fact that it doesn't exist
         return "Write text here:"
     }
 }
-//function which writes a text file and can create files. Taking 2 parameters, The file name and data on the text file.
+// Creating a function which writes a text file and can create files. Taking 2 parameters - the file name and data on the .txt file
 func writeFile(Filename: String, Data: String){
-    //breaking up the file into two components
-    //the file name
+    // Breaking up the file into two components
+    // The file name
     let nameFile =  Filename.fileName()
-    //the file type
+    // The file type
     let typeFile = Filename.fileType()
-    //getting the location of the file
+    // Retreiving the location of the file
     let filelocationURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
     let Filename = filelocationURL.appendingPathComponent(nameFile).appendingPathExtension(typeFile)
     
-    //saving the data
+    // Saving the data
     guard let data = Data.data(using: .utf8) else{
         print("can't convert string to data")
         return
     }
-    //printing to the console whether the data transmision was sucsesfull and if so how many bytes, else an error which specifies why it failed
+    // Printing to the console whether the data transmision was successful and if so how many bytes, else an error which specifies why it failed
     do{
         try data.write(to: Filename)
         print("data written: \(data)")
@@ -68,14 +68,14 @@ func writeFile(Filename: String, Data: String){
     }
 }
 
-//function which allows people to delete files
+// Creating a function which allows users to delete files
 func deleteFile(_ fileToDelete: String){
-    //breaking up the filename and extension
-    //the file name
+    // Breaking up the filename and extension
+    // The file name
     let nameFile =  fileToDelete.fileName()
-    //the file type
+    // The file type
     let typeFile = fileToDelete.fileType()
-    //getting the location of the file
+    // Getting the location of the file
     let filelocationURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
     let Filename = filelocationURL.appendingPathComponent(nameFile).appendingPathExtension(typeFile)
     
@@ -86,7 +86,7 @@ func deleteFile(_ fileToDelete: String){
     }
 }
 
-//Main Content View
+// Main Content View
 struct ContentView: View {
     // Defining the current page variable
     @State var currentPage = 0
@@ -94,14 +94,14 @@ struct ContentView: View {
     @State var GeneralNoteText: String = readingFile(inputFile: "GeneralNotesText")
     // Defining sticky note number variable
     @State var noteNumber = 0
-    // Defining variable for sticky notes string
+    // Defining the variable for the sticky notes string
     @State private var StickyText1: String = readingFile(inputFile: "StickyText1")
     @State private var StickyText2: String = readingFile(inputFile: "StickyText2")
     @State private var StickyText3: String = readingFile(inputFile: "StickyText3")
     @State private var StickyText4: String = readingFile(inputFile: "StickyText4")
     @State private var StickyText5: String = readingFile(inputFile: "StickyText5")
     
-    //variable for the position of all 5 sticky notes
+    // Defining the variable for the position of all 5 sticky notes
     @State var StickyPos1: CGSize = CGSize(width: 200, height: 200)
     @State var StickyPos2: CGSize = CGSize(width: 200, height: 200)
     @State var StickyPos3: CGSize = CGSize(width: 200, height: 200)
@@ -109,7 +109,7 @@ struct ContentView: View {
     @State var StickyPos5: CGSize = CGSize(width: 200, height: 200)
     var body: some View {
         ScrollView(showsIndicators: true) {
-            // Switching case statements to dictate the application page
+            // Switching case statements to dictate the application page is active
             switch currentPage {
             case 1:
                 GENERALNOTESPAGE(currentPage: $currentPage, GeneralNoteText: $GeneralNoteText)
@@ -156,7 +156,7 @@ struct HOMEPAGE: View{
                 // Defining the object position
                     .position(x: 0, y: -175)
                 
-                // Inserting the image that serves as our application title.
+                // Inserting the image that serves as our application title
                 Image("TitleSet")
                     // Resizing the image
                     .resizable()
@@ -197,16 +197,16 @@ struct HOMEPAGE: View{
             }
         }
     }
-//General notes page for the application
+// Creating the General notes page for the application
 struct GENERALNOTESPAGE: View{
-    //variable for changing pages
+    // Defining the variable for changing pages
     @Binding var currentPage: Int
-    //variable for getting the general note text
+    // Defining the variable for getting the General note text
     @Binding var GeneralNoteText: String
     var body: some View{
         GeometryReader { geometry in
             VStack{
-                // Creating the side bar for the Home Page
+                // Creating the side bar for the General notes page
                 // Defining the object
                 Rectangle()
                 // Defining the object size
@@ -216,7 +216,7 @@ struct GENERALNOTESPAGE: View{
                 // Defining the object position
                     .position(x: -1, y: 0)
                 
-                // Creating the top bar for the Home Page
+                // Creating the top bar for the General notes page
                 // Defining the object
                 Rectangle()
                 // Defining the object size
@@ -266,7 +266,8 @@ struct GENERALNOTESPAGE: View{
                     // Changing the position of the button
                     .position(x: geometry.size.width*0.97, y: geometry.size.height*64)
                 
-                // Defining button actions to save as a new file (Can't be placed in the generalNotesButtons because it need access to the GeneralNotesText Variable which is a binding var that can't be used in extension pages)
+                // Defining button actions to save as a new file
+                // This can't be placed in the generalNotesButtons because it needs access to the GeneralNotesText variable which is a binding var and can't be used in extension pages
                 Button(action: {
                     writeFile(Filename: "GeneralNotesText", Data: GeneralNoteText)
                     let myData = readingFile(inputFile: "GeneralNotesText")
@@ -288,13 +289,13 @@ struct GENERALNOTESPAGE: View{
     }
 }
 
-// Creating the Mind Map for the application
+// Creating the Mind Map page for the application
 struct MINDMAP: View{
     @Binding var currentPage: Int
     var body: some View{
         GeometryReader { geometry in
             VStack() {
-                // Creating the side bar for the Home Page
+                // Creating the side bar for the Mind Map page
                 // Defining the object
                 Rectangle()
                 // Defining the object size
@@ -304,7 +305,7 @@ struct MINDMAP: View{
                 // Defining the object position
                     .position(x: -1, y: 0)
                 
-                // Creating the top bar for the Home Page
+                // Creating the top bar for the Mind Map page
                 // Defining the object
                 Rectangle()
                 // Defining the object size
@@ -356,42 +357,44 @@ struct MINDMAP: View{
     }
 }
 
+// Creating the Sticky notes page for the application
 struct STICKYNOTEPAGE: View{
-    //variable for controlling currentpage
+    // Defining the variable for controlling currentPage
     @Binding var currentPage: Int
-    //variable for the number of sticky notes to display
+    // Defining the variable for the number of sticky notes to display
     @Binding var noteNumber: Int
-    //string variable for all 5 sticky notes
+    // Defining the string variables for all 5 sticky notes
     @Binding var StickyText1: String
     @Binding var StickyText2: String
     @Binding var StickyText3: String
     @Binding var StickyText4: String
     @Binding var StickyText5: String
-    //the variable for the position of the first stickynote
+    //Defining the variable for the position of all 5 sticky notes
     @Binding var StickyPos1: CGSize
     @Binding var StickyPos2: CGSize
     @Binding var StickyPos3: CGSize
     @Binding var StickyPos4: CGSize
     @Binding var StickyPos5: CGSize
-    //the displayed view
+    // The displayed view
     var body: some View{
         GeometryReader { geometry in
-            //the notes
-            //the yellow note
+        // The sticky notes
+            // The yellow note
             if noteNumber >= 0{
                 ZStack{
-                    //rectangle behind Texteditor 1
+                    // Creating a rectangle to serve as the note's outline
                     Rectangle()
                         // Defining the note's size and position
                         .frame(width: 250,height: 250)
                         .offset(StickyPos1)
-                        //color for sticky note three
-                        .foregroundColor(.yellow)
+                        // // Changing the outline color for note #1 (the yellow note)
+                        .foregroundColor(Color("StickyYellowOutline"))
+                        // Making the note draggable
                         .gesture(
                             DragGesture()
                                 .onChanged{value in withAnimation(.spring()) {
                                     StickyPos1 = value.translation
-                                    //stopping the sticky note from leaving the white area
+                                    // Preventing the sticky note from leaving its intended area
                                     if StickyPos1.width <= 77 {
                                         StickyPos1.width = 77
                                     }
@@ -401,30 +404,31 @@ struct STICKYNOTEPAGE: View{
                                 }
                             }
                         )
-                    //text editor 1
+                    // Creating the editable text box for sticky note #1 (the yellow note)
                     TextEditor(text: $StickyText1)
                         // Defining the note's size and position
                         .frame(width: 225,height: 225)
                         .offset(StickyPos1)
-                        //color for sticky note three
+                        // Changing the color for note #1 (the yellow note)
                         .colorMultiply(Color("StickyYellow"))
                     }
                 }
-            //the pink note
+            // The pink note
             if noteNumber >= 1{
                 ZStack{
-                    //rectangle behind Texteditor 2
+                    // Creating a rectangle to serve as the note's outline
                     Rectangle()
                         // Defining the note's size and position
                         .frame(width: 250,height: 250)
                         .offset(StickyPos2)
-                        //color for sticky note three
-                        .foregroundColor(.pink)
+                        // Changing the outline color for note #2 (the pink note)
+                        .foregroundColor(Color("StickyPinkOutline"))
+                        // Making the note draggable
                         .gesture(
                             DragGesture()
                                 .onChanged{value in withAnimation(.spring()) {
                                     StickyPos2 = value.translation
-                                    //stopping the sticky note from leaving the white area
+                                    // Preventing the sticky note from leaving its intended area
                                     if StickyPos2.width <= 77 {
                                         StickyPos2.width = 77
                                     }
@@ -434,29 +438,31 @@ struct STICKYNOTEPAGE: View{
                                 }
                             }
                         )
-                    //text editor 2
+                    // Creating the editable text box for sticky note #2 (the pink note)
                     TextEditor(text: $StickyText2)
                         // Defining the note's size and position
                         .frame(width: 225,height: 225)
                         .offset(StickyPos2)
-                        //color for sticky note three
+                        // Changing the color for note #2 (the pink note)
                         .colorMultiply(Color("StickyPink"))
                 }
             }
+            // The purple note
             if noteNumber >= 2{
                 ZStack {
-                    //rectangle behind Texteditor 3
+                    // Creating a rectangle to serve as the note's outline
                     Rectangle()
                         // Defining the note's size and position
                         .frame(width: 250,height: 250)
                         .offset(StickyPos3)
-                        //color for sticky note three background
-                        .foregroundColor(.purple)
+                        // Changing the outline color for note #3 (the purple note)
+                        .foregroundColor(Color("StickyPurpleOutline"))
+                        // Making the note draggable
                         .gesture(
                             DragGesture()
                                 .onChanged{value in withAnimation(.spring()) {
                                     StickyPos3 = value.translation
-                                    //stopping the sticky note from leaving the white area
+                                    // Preventing the sticky note from leaving its intended area
                                     if StickyPos3.width <= 77 {
                                         StickyPos3.width = 77
                                     }
@@ -466,29 +472,31 @@ struct STICKYNOTEPAGE: View{
                                 }
                             }
                         )
-                    //text editor 3
+                    // Creating the editable text box for sticky note #3 (the purple note)
                     TextEditor(text: $StickyText3)
                     // Defining the note's size and position
                         .frame(width: 225,height: 225)
                         .offset(StickyPos3)
-                        //color for sticky note three
+                        // Changing the color for note #2 (the pink note)
                         .colorMultiply(Color("StickyPurple"))
                 }
             }
+            // The green note
             if noteNumber >= 3{
                 ZStack {
-                    //rectangle behind Texteditor 4
+                    // Creating a rectangle to serve as the note's outline
                     Rectangle()
                         // Defining the note's size and position
                         .frame(width: 250,height: 250)
                         .offset(StickyPos4)
-                        //color for sticky note three
-                        .foregroundColor(.green)
+                        // Changing the outline color for note #4 (the green note)
+                        .foregroundColor(Color("StickyGreenOutline"))
+                        // Making the note draggable
                         .gesture(
                             DragGesture()
                                 .onChanged{value in withAnimation(.spring()) {
                                     StickyPos4 = value.translation
-                                    //stopping the sticky note from leaving the white area
+                                    // Preventing the sticky note from leaving its intended area
                                     if StickyPos4.width <= 77 {
                                         StickyPos4.width = 77
                                     }
@@ -498,29 +506,31 @@ struct STICKYNOTEPAGE: View{
                                 }
                             }
                         )
-                    //text editor 4
+                    // Creating the editable text box for sticky note #4 (the green note)
                     TextEditor(text: $StickyText4)
-                    // Defining the note's size and position
+                        // Defining the note's size and position
                         .frame(width: 225,height: 225)
                         .offset(StickyPos4)
-                    //color for sticky note three
+                        // Changing the color for note #4 (the green note)
                         .colorMultiply(Color("StickyGreen"))
                 }
             }
+        // The blue note
         if noteNumber >= 4{
             ZStack{
-                //rectangle behind Texteditor 5
+                // Creating a rectangle to serve as the note's outline
                 Rectangle()
                     // Defining the note's size and position
                     .frame(width: 250,height: 250)
                     .offset(StickyPos5)
-                    //color for sticky note three
-                    .foregroundColor(.blue)
+                    // Changing the outline color for note #5 (the blue note)
+                    .foregroundColor(Color("StickyBlueOutline"))
+                    // Making the note draggable
                     .gesture(
                         DragGesture()
                             .onChanged{value in withAnimation(.spring()) {
                                 StickyPos5 = value.translation
-                                //stopping the sticky note from leaving the white area
+                                // Preventing the sticky note from leaving its intended area
                                 if StickyPos5.width <= 77 {
                                     StickyPos5.width = 77
                                 }
@@ -530,12 +540,12 @@ struct STICKYNOTEPAGE: View{
                             }
                         }
                     )
-                //text editor 5
+                // Creating the editable text box for sticky note #5 (the blue note)
                 TextEditor(text: $StickyText5)
                     // Defining the note's size and position
                     .frame(width: 225, height: 225)
                     .offset(StickyPos5)
-                    //color for sticky note five
+                    // Changing the color for note #5 (the blue note)
                     .colorMultiply(Color("StickyBlue"))
                 }
             }
@@ -549,7 +559,7 @@ struct ContentView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
     }
 }
-//Home page buttons extension preview
+// Home page buttons extension preview
 private extension ContentView{
     var HomePageButtons: some View{
         GeometryReader { geometry in
@@ -752,9 +762,9 @@ private extension ContentView{
                         // Styling and repositioning the button
                         .buttonStyle(PlainButtonStyle())
                         .position(x:38, y:235)
-                //the button which saves the file information of the sticky note text
+                // Creating the button which saves the file information of the Sticky note text
                 Button(action: {
-                    //saving the files
+                    // Saving the files
                     writeFile(Filename: "StickyText1", Data: StickyText1)
                     writeFile(Filename: "StickyText2", Data: StickyText2)
                     writeFile(Filename: "StickyText3", Data: StickyText3)
@@ -766,7 +776,7 @@ private extension ContentView{
                     let stickyData3 = readingFile(inputFile: "StickyText3")
                     let stickyData4 = readingFile(inputFile: "StickyText4")
                     let stickyData5 = readingFile(inputFile: "StickyText5")
-                    //print the amount of data added to the console
+                    // Printing the amount of data added to the console
                     print(stickyData1)
                     print(stickyData2)
                     print(stickyData3)
@@ -787,7 +797,7 @@ private extension ContentView{
             }
         }
     }
-    
+    // Changing the size and position of the General notes TextEditor
     private extension ContentView{
         var textEditorView: some View{
             GeometryReader { geometry in
