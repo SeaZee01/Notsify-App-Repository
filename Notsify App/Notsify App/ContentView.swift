@@ -172,29 +172,52 @@ struct ContentView: View {
                 // Case three is the mind map page
             case 3:
                 // The basic outline of the page for every page that isn't the home page
-                PageOutline
-                MindMapButtons
-                MindMapTitle
-                if TileAmount > 0{
-                    MindMapTile1
-                }
-                if TileAmount > 1 {
-                    MindMapTile2
-                }
-                if TileAmount > 2{
-                    MindMapTile3
-                }
-                if TileAmount > 3 {
-                    MindMapTile4
-                }
-                if TileAmount > 4{
-                    MindMapTile5
-                }
-                if TileAmount > 5 {
-                    MindMapTile6
-                }
-                if TileAmount > 6{
-                    MindMapTile7
+                ZStack{
+                    PageOutline
+                    MindMapButtons
+                    MindMapTitle
+                    if TileAmount > 0{
+                        Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos1.width + 100, y: MindMapPos1.height + 60))
+                            .stroke(Color.black, lineWidth: 3)
+                            .zIndex(-1)
+                        MindMapTile1
+                    }
+                    if TileAmount > 1 {
+                        Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos2.width + 100, y: MindMapPos2.height + 60))
+                            .stroke(Color.black, lineWidth: 3)
+                            .zIndex(-1)
+                        MindMapTile2
+                    }
+                    if TileAmount > 2{
+                        Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos3.width + 100, y: MindMapPos3.height + 60))
+                            .stroke(Color.black, lineWidth: 3)
+                            .zIndex(-1)
+                        MindMapTile3
+                    }
+                    if TileAmount > 3 {
+                        Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos4.width + 100, y: MindMapPos4.height + 60))
+                            .stroke(Color.black, lineWidth: 3)
+                            .zIndex(-1)
+                        MindMapTile4
+                    }
+                    if TileAmount > 4{
+                        Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos5.width + 100, y: MindMapPos5.height + 60))
+                            .stroke(Color.black, lineWidth: 3)
+                            .zIndex(-1)
+                        MindMapTile5
+                    }
+                    if TileAmount > 5 {
+                        Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos6.width + 100, y: MindMapPos6.height + 60))
+                            .stroke(Color.black, lineWidth: 3)
+                            .zIndex(-1)
+                        MindMapTile6
+                    }
+                    if TileAmount > 6{
+                        Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos7.width + 100, y: MindMapPos7.height + 60))
+                            .stroke(Color.black, lineWidth: 3)
+                            .zIndex(-1)
+                        MindMapTile7
+                    }
                 }
             // The default case (not 1 2 or 3) is the homepage
             default:
@@ -773,7 +796,7 @@ private extension ContentView{
             // Defining the object colour
                 .foregroundColor(Color("DarkOrange"))
             // Defining the object position
-                .position(x:37, y:160)
+                .position(x:37, y:200)
             
             // Defining button actions to change page
             Button(action: {
@@ -788,7 +811,7 @@ private extension ContentView{
                 }
                     // Styling and repositioning the button
                     .buttonStyle(PlainButtonStyle())
-                    .position(x:38, y:160)
+                    .position(x:38, y:200)
             
             // Button to create a new mind map tile
             // Defining the object for button background
@@ -799,7 +822,7 @@ private extension ContentView{
             // Defining the object colour
                 .foregroundColor(Color("DarkOrange"))
             // Defining the object position
-                .position(x:37, y:235)
+                .position(x:37, y:275)
             
             // Defining button actions to add a mind map tile
             Button(action: {
@@ -817,7 +840,32 @@ private extension ContentView{
                 }
                     // Styling and repositioning the button
                     .buttonStyle(PlainButtonStyle())
-                    .position(x:38, y:235)
+                    .position(x:38, y:275)
+            
+            
+            // Creating the button which saves the file information of the mind map text
+            Button(action: {
+                // Saving the files
+                writeFile(Filename: "MindMapTitle", Data: MindMapTitleStr)
+                writeFile(Filename: "MindMapStr1", Data: MindMapStr1)
+                writeFile(Filename: "MindMapStr2", Data: MindMapStr2)
+                writeFile(Filename: "MindMapStr3", Data: MindMapStr3)
+                writeFile(Filename: "MindMapStr4", Data: MindMapStr4)
+                writeFile(Filename: "MindMapStr5", Data: MindMapStr5)
+                writeFile(Filename: "MindMapStr6", Data: MindMapStr6)
+                writeFile(Filename: "MindMapStr7", Data: MindMapStr7)
+            }) {
+                // Adding and resizing the icon that the button will present as
+                Text("Save")
+                    // Resizing the icon image
+                    .frame(width: 60, height: 60)
+                    .foregroundColor(.white)
+                    .background(Color("DarkOrange"))
+                    .cornerRadius(10)
+                }
+                // Styling and repositioning the button
+                .buttonStyle(PlainButtonStyle())
+                .position(x:37, y:350)
         }
     }
 }
@@ -844,8 +892,8 @@ private extension ContentView{
                                 if MindMapTitlePos.width <= 77 {
                                     MindMapTitlePos.width = 77
                                 }
-                                if MindMapTitlePos.height <= 100 {
-                                    MindMapTitlePos.height = 100
+                                if MindMapTitlePos.height <= 132 {
+                                    MindMapTitlePos.height = 132
                                 }
                             }
                             }
@@ -886,8 +934,8 @@ private extension ContentView{
                                 if MindMapPos1.width <= 77 {
                                     MindMapPos1.width = 77
                                 }
-                                if MindMapPos1.height <= 100 {
-                                    MindMapPos1.height = 100
+                                if MindMapPos1.height <= 132 {
+                                    MindMapPos1.height = 132
                                 }
                             }
                             }
@@ -928,8 +976,8 @@ private extension ContentView{
                                 if MindMapPos2.width <= 77 {
                                     MindMapPos2.width = 77
                                 }
-                                if MindMapPos2.height <= 100 {
-                                    MindMapPos2.height = 100
+                                if MindMapPos2.height <= 132 {
+                                    MindMapPos2.height = 132
                                 }
                             }
                             }
@@ -970,8 +1018,8 @@ private extension ContentView{
                                 if MindMapPos3.width <= 77 {
                                     MindMapPos3.width = 77
                                 }
-                                if MindMapPos3.height <= 100 {
-                                    MindMapPos3.height = 100
+                                if MindMapPos3.height <= 132 {
+                                    MindMapPos3.height = 132
                                 }
                             }
                             }
@@ -1012,8 +1060,8 @@ private extension ContentView{
                                 if MindMapPos4.width <= 77 {
                                     MindMapPos4.width = 77
                                 }
-                                if MindMapPos4.height <= 100 {
-                                    MindMapPos4.height = 100
+                                if MindMapPos4.height <= 132 {
+                                    MindMapPos4.height = 132
                                 }
                             }
                             }
@@ -1054,8 +1102,8 @@ private extension ContentView{
                                 if MindMapPos5.width <= 77 {
                                     MindMapPos5.width = 77
                                 }
-                                if MindMapPos5.height <= 100 {
-                                    MindMapPos5.height = 100
+                                if MindMapPos5.height <= 132 {
+                                    MindMapPos5.height = 132
                                 }
                             }
                             }
@@ -1096,8 +1144,8 @@ private extension ContentView{
                                 if MindMapPos6.width <= 77 {
                                     MindMapPos6.width = 77
                                 }
-                                if MindMapPos6.height <= 100 {
-                                    MindMapPos6.height = 100
+                                if MindMapPos6.height <= 132 {
+                                    MindMapPos6.height = 132
                                 }
                             }
                             }
@@ -1138,8 +1186,8 @@ private extension ContentView{
                                 if MindMapPos7.width <= 77 {
                                     MindMapPos7.width = 77
                                 }
-                                if MindMapPos7.height <= 100 {
-                                    MindMapPos7.height = 100
+                                if MindMapPos7.height <= 132 {
+                                    MindMapPos7.height = 132
                                 }
                             }
                             }
