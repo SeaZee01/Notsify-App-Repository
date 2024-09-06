@@ -86,6 +86,7 @@ func deleteFile(_ fileToDelete: String){
     }
 }
 
+// The function used for the mindmap tiles to figure out which mind map tile button was clicked so the line connecting mind map tiles is going between the correct tiles. The parameter taken as an intiger tells the funciton which number tile clicked the button. (If 1 then tile 1 clicked, if 2 then tile 2 clicked and so on.)
 // The function to create a line because XCode doesn't have there own in-built function
 struct Line: Shape{
     // The two parameters (start and end point of the line)
@@ -118,11 +119,11 @@ struct ContentView: View {
     @State private var StickyText5: String = readingFile(inputFile: "StickyText5")
     
     // Defining the variable for the position of all 5 sticky notes
-    @State var StickyPos1: CGSize = CGSize(width: 200, height: 200)
-    @State var StickyPos2: CGSize = CGSize(width: 200, height: 200)
-    @State var StickyPos3: CGSize = CGSize(width: 200, height: 200)
-    @State var StickyPos4: CGSize = CGSize(width: 200, height: 200)
-    @State var StickyPos5: CGSize = CGSize(width: 200, height: 200)
+    @State var StickyPos1: CGSize = CGSize(width: 100, height: 150)
+    @State var StickyPos2: CGSize = CGSize(width: 100, height: 150)
+    @State var StickyPos3: CGSize = CGSize(width: 100, height: 150)
+    @State var StickyPos4: CGSize = CGSize(width: 100, height: 150)
+    @State var StickyPos5: CGSize = CGSize(width: 100, height: 150)
     
     // Defining the variable position and string for mindmap title square
     @State private var MindMapTitleStr: String = readingFile(inputFile: "MindMapTitle")
@@ -148,6 +149,14 @@ struct ContentView: View {
     @State var MindMapPos6: CGSize = CGSize(width: 500, height: 600)
     @State var MindMapPos7: CGSize = CGSize(width: 700, height: 600)
     
+    // Variables for lines to know which mindmap tile it should be going from.
+    @State var StartLineLocation1: CGSize = CGSize(width: 300, height: 300)
+    @State var StartLineLocation2: CGSize = CGSize(width: 500, height: 300)
+    @State var StartLineLocation3: CGSize = CGSize(width: 700, height: 300)
+    @State var StartLineLocation4: CGSize = CGSize(width: 900, height: 300)
+    @State var StartLineLocation5: CGSize = CGSize(width: 300, height: 600)
+    @State var StartLineLocation6: CGSize = CGSize(width: 500, height: 600)
+    @State var StartLineLocation7: CGSize = CGSize(width: 700, height: 600)
     var body: some View {
         ScrollView(showsIndicators: true) {
             // Switching case statements to dictate the application page is active
@@ -845,7 +854,7 @@ private extension ContentView{
             
             // Creating the button which saves the file information of the mind map text
             Button(action: {
-                // Saving the files
+                // Saving the files😁
                 writeFile(Filename: "MindMapTitle", Data: MindMapTitleStr)
                 writeFile(Filename: "MindMapStr1", Data: MindMapStr1)
                 writeFile(Filename: "MindMapStr2", Data: MindMapStr2)
@@ -907,6 +916,7 @@ private extension ContentView{
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("NormOrange"))
+                
             }
         }
     }
@@ -920,7 +930,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 100)
+                    .frame(width: 200, height: 125)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos1)
@@ -944,11 +954,26 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr1)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(MindMapPos1)
+                    .offset(x:MindMapPos1.width, y:MindMapPos1.height - 12.5)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
+                
+                // Defining button actions add mindmap tiles
+                Button(action: {
+                    TileAmount += 1
+                }) {
+                // Adding and resizing the icon that the button will present as
+                    Image("AddButton")
+                    // Resizing the icon image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 25, height: 25)
+                    }
+                        // Styling and repositioning the button
+                        .buttonStyle(PlainButtonStyle())
+                        .offset(x:MindMapPos1.width, y:MindMapPos1.height + 45)
             }
         }
     }
@@ -962,7 +987,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 100)
+                    .frame(width: 200, height: 125)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos2)
@@ -986,11 +1011,26 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr2)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(MindMapPos2)
+                    .offset(x:MindMapPos2.width, y:MindMapPos2.height - 12.5)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
+                
+                // Defining button actions add mindmap tiles
+                Button(action: {
+                    TileAmount += 1
+                }) {
+                // Adding and resizing the icon that the button will present as
+                    Image("AddButton")
+                    // Resizing the icon image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 25, height: 25)
+                    }
+                        // Styling and repositioning the button
+                        .buttonStyle(PlainButtonStyle())
+                        .offset(x:MindMapPos2.width, y:MindMapPos2.height + 45)
             }
         }
     }
@@ -1004,7 +1044,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 100)
+                    .frame(width: 200, height: 125)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos3)
@@ -1028,11 +1068,26 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr3)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(MindMapPos3)
+                    .offset(x:MindMapPos3.width, y:MindMapPos3.height - 12.5)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
+                
+                // Defining button actions add mindmap tiles
+                Button(action: {
+                    TileAmount += 1
+                }) {
+                // Adding and resizing the icon that the button will present as
+                    Image("AddButton")
+                    // Resizing the icon image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 25, height: 25)
+                    }
+                        // Styling and repositioning the button
+                        .buttonStyle(PlainButtonStyle())
+                        .offset(x:MindMapPos3.width, y:MindMapPos3.height + 45)
             }
         }
     }
@@ -1046,7 +1101,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 100)
+                    .frame(width: 200, height: 125)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos4)
@@ -1070,11 +1125,26 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr4)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(MindMapPos4)
+                    .offset(x:MindMapPos4.width, y:MindMapPos4.height - 12.5)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
+                
+                // Defining button actions add mindmap tiles
+                Button(action: {
+                    TileAmount += 1
+                }) {
+                // Adding and resizing the icon that the button will present as
+                    Image("AddButton")
+                    // Resizing the icon image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 25, height: 25)
+                    }
+                        // Styling and repositioning the button
+                        .buttonStyle(PlainButtonStyle())
+                        .offset(x:MindMapPos4.width, y:MindMapPos4.height + 45)
             }
         }
     }
@@ -1088,7 +1158,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 100)
+                    .frame(width: 200, height: 125)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos5)
@@ -1112,11 +1182,26 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr5)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(MindMapPos5)
+                    .offset(x:MindMapPos5.width, y:MindMapPos5.height - 12.5)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
+                
+                // Defining button actions add mindmap tiles
+                Button(action: {
+                    TileAmount += 1
+                }) {
+                // Adding and resizing the icon that the button will present as
+                    Image("AddButton")
+                    // Resizing the icon image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 25, height: 25)
+                    }
+                        // Styling and repositioning the button
+                        .buttonStyle(PlainButtonStyle())
+                        .offset(x:MindMapPos5.width, y:MindMapPos5.height + 45)
             }
         }
     }
@@ -1130,7 +1215,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 100)
+                    .frame(width: 200, height: 125)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos6)
@@ -1154,11 +1239,26 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr6)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(MindMapPos6)
+                    .offset(x:MindMapPos6.width, y:MindMapPos6.height - 12.5)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
+                
+                // Defining button actions add mindmap tiles
+                Button(action: {
+                    TileAmount += 1
+                }) {
+                // Adding and resizing the icon that the button will present as
+                    Image("AddButton")
+                    // Resizing the icon image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 25, height: 25)
+                    }
+                        // Styling and repositioning the button
+                        .buttonStyle(PlainButtonStyle())
+                        .offset(x:MindMapPos6.width, y:MindMapPos6.height + 45)
             }
         }
     }
@@ -1172,7 +1272,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 100)
+                    .frame(width: 200, height: 125)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos7)
@@ -1196,11 +1296,26 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr7)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(MindMapPos7)
+                    .offset(x:MindMapPos7.width, y:MindMapPos7.height - 12.5)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
+                
+                // Defining button actions add mindmap tiles
+                Button(action: {
+                    TileAmount += 1
+                }) {
+                // Adding and resizing the icon that the button will present as
+                    Image("AddButton")
+                    // Resizing the icon image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 25, height: 25)
+                    }
+                        // Styling and repositioning the button
+                        .buttonStyle(PlainButtonStyle())
+                        .offset(x:MindMapPos7.width, y:MindMapPos7.height + 45)
             }
         }
     }
