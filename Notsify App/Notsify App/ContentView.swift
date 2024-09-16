@@ -404,6 +404,15 @@ struct GENERALNOTESPAGE: View{
     @Binding var RecentlyOpened3: String
     var body: some View{
         GeometryReader { geometry in
+            // Inserting the image that serves as our general notes title
+            Image("GeneralTitle")
+                // Resizing the image
+                .resizable()
+                .scaledToFit()
+                .frame(width:455, height: 455)
+                // Changing the image position
+                .position(x: geometry.size.width/2, y: 90)
+            
                 // This can't be placed in the generalNotesButtons because it needs access to the GeneralNotesText variable which is a binding var and can't be used in extension pages
                 // This button checks what page the user is on and displays the general note text depending on what general note page they have selected.
                 Button(action: {
@@ -456,7 +465,7 @@ struct GENERALNOTESPAGE: View{
                     }
                 }
                 .frame(width: 60, height: 60) // Adjust the size of the Picker
-                .position(x: 37, y: 330)
+                .position(x: 33, y: 315)
             }
             }
         }
@@ -487,6 +496,15 @@ struct STICKYNOTEPAGE: View{
             // The yellow note
             if noteNumber >= 0{
                 ZStack{
+                    // Inserting the image that serves as our sticky notes title
+                    Image("StickyTitle")
+                        // Resizing the image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width:460, height: 460)
+                        // Changing the image position
+                        .position(x: geometry.size.width/2, y: 90)
+
                     // Creating a rectangle to serve as the note's outline
                     Rectangle()
                         // Defining the note's size and position
@@ -971,6 +989,16 @@ private extension ContentView {
 private extension ContentView{
     var MindMapButtons: some View{
         GeometryReader { geometry in
+            // Inserting the image that serves as our mind map title
+            // This has to go here as the mind map page does not have a page outline extension
+            Image("MindMapTitle")
+                // Resizing the image
+                .resizable()
+                .scaledToFit()
+                .frame(width:465, height: 465)
+                // Changing the image position
+                .position(x: geometry.size.width/2, y: 105)
+                        
             // Button to go to home page
             // Defining the object for button background
             Rectangle()
