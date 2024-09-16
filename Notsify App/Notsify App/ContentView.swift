@@ -8,6 +8,7 @@
 import SwiftUI
 // Importing the libary for manipulating .txt files
 import Cocoa
+// This extension contains two key functions for getting the file name.
 extension String{
     // Getting the filename from a string
     func fileName() -> String{
@@ -21,7 +22,7 @@ extension String{
     }
 }
 
-// Creating a function which reads the text file and is recyclable for more efficency
+// Creating a function which reads the text file
 func readingFile(inputFile: String) -> String{
     // Breaking up the file into two components
     // The file name
@@ -43,6 +44,30 @@ func readingFile(inputFile: String) -> String{
         return "Write text here:"
     }
 }
+
+// Creating a function which reads the text file for the home page specifically
+func HomePagereadingFile(inputFile: String) -> String{
+    // Breaking up the file into two components
+    // The file name
+    let nameFile =  inputFile.fileName()
+    // The file type
+    let typeFile = inputFile.fileType()
+    // Getting the location of the file
+    let filelocationURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+    
+    let readFile = filelocationURL.appendingPathComponent(nameFile).appendingPathExtension(typeFile)
+    
+    // Reading the data on the .txt file
+    do {
+        let savedInfo = try String(contentsOf: readFile)
+        return savedInfo
+        // Defining the process if the folder doesn't exist
+    } catch {
+        // If the file doesn't exist then return the fact that it doesn't exist
+        return "1)NotePage1"
+    }
+}
+
 // Creating a function which writes a text file and can create files. Taking 2 parameters - the file name and data on the .txt file
 func writeFile(Filename: String, Data: String){
     // Breaking up the file into two components
@@ -69,6 +94,7 @@ func writeFile(Filename: String, Data: String){
 }
 
 // Creating a function which allows users to delete files
+// This function isn't used although in future prospects for the app could be very handy.
 func deleteFile(_ fileToDelete: String){
     // Breaking up the filename and extension
     // The file name
@@ -86,7 +112,6 @@ func deleteFile(_ fileToDelete: String){
     }
 }
 
-// The function used for the mindmap tiles to figure out which mind map tile button was clicked so the line connecting mind map tiles is going between the correct tiles. The parameter taken as an intiger tells the funciton which number tile clicked the button. (If 1 then tile 1 clicked, if 2 then tile 2 clicked and so on.)
 // The function to create a line because XCode doesn't have there own in-built function
 struct Line: Shape{
     // The two parameters (start and end point of the line)
@@ -102,15 +127,30 @@ struct Line: Shape{
         return path
     }
 }
-
 // Main Content View
 struct ContentView: View {
+    // --- DEFINING ALL THE VARIABLES USED IN THE CODE THAT ARE USED BETWEEN EXTENSIONS / STRUCTERS
     // Defining the current page variable
     @State var currentPage = 0
-    // defining the variable for the general notes string
-    @State var GeneralNoteText: String = readingFile(inputFile: "GeneralNotesText")
     // Defining sticky note number variable
     @State var noteNumber = 0
+    // The general notes page variables
+    @State var NotePages = ["1)NotePage1", "2)NotePage2", "3)NotePage3", "4)NotePage4", "5)NotePage5"]
+    // The selected note page when laucnhing the application
+    @State private var selectedNotePage = "1)NotePage1"
+    
+    // Defining the variable order for pages openened
+    @State var RecentlyOpened1: String = HomePagereadingFile(inputFile: "RecentlyOpened1")
+    @State var RecentlyOpened2: String = HomePagereadingFile(inputFile: "RecentlyOpened2")
+    @State var RecentlyOpened3: String = HomePagereadingFile(inputFile: "RecentlyOpened3")
+    
+    // Defining the variable for the general notes string
+    @State var GeneralNoteText1: String = readingFile(inputFile: "1)NotePage1")
+    @State var GeneralNoteText2: String = readingFile(inputFile: "2)NotePage2")
+    @State var GeneralNoteText3: String = readingFile(inputFile: "3)NotePage3")
+    @State var GeneralNoteText4: String = readingFile(inputFile: "4)NotePage4")
+    @State var GeneralNoteText5: String = readingFile(inputFile: "5)NotePage5")
+    
     // Defining the variable for the sticky notes string
     @State private var StickyText1: String = readingFile(inputFile: "StickyText1")
     @State private var StickyText2: String = readingFile(inputFile: "StickyText2")
@@ -148,15 +188,7 @@ struct ContentView: View {
     @State var MindMapPos5: CGSize = CGSize(width: 300, height: 600)
     @State var MindMapPos6: CGSize = CGSize(width: 500, height: 600)
     @State var MindMapPos7: CGSize = CGSize(width: 700, height: 600)
-    
-    // Variables for lines to know which mindmap tile it should be going from.
-    @State var StartLineLocation1: CGSize = CGSize(width: 300, height: 300)
-    @State var StartLineLocation2: CGSize = CGSize(width: 500, height: 300)
-    @State var StartLineLocation3: CGSize = CGSize(width: 700, height: 300)
-    @State var StartLineLocation4: CGSize = CGSize(width: 900, height: 300)
-    @State var StartLineLocation5: CGSize = CGSize(width: 300, height: 600)
-    @State var StartLineLocation6: CGSize = CGSize(width: 500, height: 600)
-    @State var StartLineLocation7: CGSize = CGSize(width: 700, height: 600)
+    // The main body which contains all the view switching (switching between pages and what structers/extension are on each page.)
     var body: some View {
         ScrollView(showsIndicators: true) {
             // Switching case statements to dictate the application page is active
@@ -165,8 +197,8 @@ struct ContentView: View {
             case 1:
                 // The basic outline of the page for every page that isn't the home page
                 PageOutline
-                // The general notes page related elements such as the buttons
-                GENERALNOTESPAGE(currentPage: $currentPage, GeneralNoteText: $GeneralNoteText)
+                // The general notes page related elements such as the buttons which can't be in the buttons page and other items.
+                GENERALNOTESPAGE(currentPage: $currentPage, GeneralNoteText1: $GeneralNoteText1,GeneralNoteText2: $GeneralNoteText2,GeneralNoteText3: $GeneralNoteText3,GeneralNoteText4: $GeneralNoteText4,GeneralNoteText5: $GeneralNoteText5, selectedNotePage: $selectedNotePage, NotePages: $NotePages, RecentlyOpened1: $RecentlyOpened1, RecentlyOpened2: $RecentlyOpened2, RecentlyOpened3: $RecentlyOpened3)
                 GeneralNotePageButtons
                 // The text editor in the general notes page
                 textEditorView
@@ -182,49 +214,81 @@ struct ContentView: View {
             case 3:
                 // The basic outline of the page for every page that isn't the home page
                 ZStack{
+                    // The basic page outline for every page but the homepage
                     PageOutline
+                    // Mind map page buttons extension
                     MindMapButtons
+                    // The mind map title always exists, which is why it is at the top.
                     MindMapTitle
+                    // If Statements which display a certain amount of the lines and tiles depending on tileAmount variable
                     if TileAmount > 0{
+                        // The line connects between the Title tile and first tile.
                         Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos1.width + 100, y: MindMapPos1.height + 60))
+                            // Giving the line a color and width
                             .stroke(Color.black, lineWidth: 3)
+                            // This makes sure the Line spawns behind every tile by making it the bottom of the priotity order.
                             .zIndex(-1)
+                        // Displaying the first tile
                         MindMapTile1
                     }
                     if TileAmount > 1 {
+                        // The line connects between the Title tile and seccond tile.
                         Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos2.width + 100, y: MindMapPos2.height + 60))
+                            // Giving the line a color and width
                             .stroke(Color.black, lineWidth: 3)
+                            // This makes sure the Line spawns behind every tile by making it the bottom of the priotity order.
                             .zIndex(-1)
+                        // Displaying the seccond tile
                         MindMapTile2
                     }
                     if TileAmount > 2{
+                        // The line connects between the Title tile and third tile.
                         Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos3.width + 100, y: MindMapPos3.height + 60))
+                            // Giving the line a color and width
                             .stroke(Color.black, lineWidth: 3)
+                            // This makes sure the Line spawns behind every tile by making it the bottom of the priotity order.
                             .zIndex(-1)
+                        // Displaying the third tile
                         MindMapTile3
                     }
                     if TileAmount > 3 {
+                        // The line connects between the Title tile and fourth tile.
                         Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos4.width + 100, y: MindMapPos4.height + 60))
+                            // Giving the line a color and width
                             .stroke(Color.black, lineWidth: 3)
+                            // This makes sure the Line spawns behind every tile by making it the bottom of the priotity order.
                             .zIndex(-1)
+                        // Displaying the fourth tile
                         MindMapTile4
                     }
                     if TileAmount > 4{
+                        // The line connects between the Title tile and fifth tile.
                         Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos5.width + 100, y: MindMapPos5.height + 60))
+                            // Giving the line a color and width
                             .stroke(Color.black, lineWidth: 3)
+                            // This makes sure the Line spawns behind every tile by making it the bottom of the priotity order.
                             .zIndex(-1)
+                        // Displaying the fifth tile
                         MindMapTile5
                     }
                     if TileAmount > 5 {
+                        // The line connects between the Title tile and sixth tile.
                         Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos6.width + 100, y: MindMapPos6.height + 60))
+                            // Giving the line a color and width
                             .stroke(Color.black, lineWidth: 3)
+                            // This makes sure the Line spawns behind every tile by making it the bottom of the priotity order.
                             .zIndex(-1)
+                        // Displaying the sixth tile
                         MindMapTile6
                     }
                     if TileAmount > 6{
+                        // The line connects between the Title tile and seventh tile.
                         Line(StartPoint: CGPoint(x:MindMapTitlePos.width + 50, y:MindMapTitlePos.height + 60), EndPoint: CGPoint(x:MindMapPos7.width + 100, y: MindMapPos7.height + 60))
+                            // Giving the line a color and width
                             .stroke(Color.black, lineWidth: 3)
+                            // This makes sure the Line spawns behind every tile by making it the bottom of the priotity order.
                             .zIndex(-1)
+                        // Displaying the seventh tile
                         MindMapTile7
                     }
                 }
@@ -234,6 +298,7 @@ struct ContentView: View {
                 HOMEPAGE(currentPage: $currentPage)
                 // Homepage buttons
                 HomePageButtons
+                homepageRecentPage1
             }
         }
         // The minimum width and height the screen can be moved to (This insures you can't make the screen small or big.)
@@ -294,6 +359,7 @@ struct HOMEPAGE: View{
                     .frame(width:130, height: 130)
                     // Changing the image position
                     .position(x: 67.5, y: 47)
+                
                 // Creating the help button
                 // Labelling the button with the link to our website
                 Link("Help", destination: URL(string: "https://www.canva.com/design/DAGNBe5W3jc/KvojK8gN0hCMNO4tXyXDNw/view?utm_content=DAGNBe5W3jc&utm_campaign=designshare&utm_medium=link&utm_source=editor#1")!)
@@ -303,7 +369,18 @@ struct HOMEPAGE: View{
                     .foregroundColor(.white)
                     .cornerRadius(8)
                     // Changing the position of the button
-                    .position(x: geometry.size.width*0.955, y: geometry.size.height*64)
+                    .position(x: geometry.size.width*0.955, y: 22)
+                
+                // Creating the light orange center
+                Rectangle()
+                    // The size of the square
+                    .frame(width: geometry.size.width * 0.7, height: 570)
+                    // Positioning it in the lower center
+                    .position(x: geometry.size.width * 0.54, y: 450)
+                    // Making the square light orange
+                    .foregroundColor(Color("LightOrange"))
+                
+                
                 }
             }
         }
@@ -312,19 +389,53 @@ struct HOMEPAGE: View{
 struct GENERALNOTESPAGE: View{
     // Defining the variable for changing pages
     @Binding var currentPage: Int
-    // Defining the variable for getting the General note text
-    @Binding var GeneralNoteText: String
+    // Defining the variables for getting the General note text for all 5 possible pages
+    @Binding var GeneralNoteText1: String
+    @Binding var GeneralNoteText2: String
+    @Binding var GeneralNoteText3: String
+    @Binding var GeneralNoteText4: String
+    @Binding var GeneralNoteText5: String
+    //defining the list with note text
+    @Binding var selectedNotePage: String
+    @Binding var NotePages: [String]
+    // The variables for changing the quick launch
+    @Binding var RecentlyOpened1: String
+    @Binding var RecentlyOpened2: String
+    @Binding var RecentlyOpened3: String
     var body: some View{
         GeometryReader { geometry in
-            VStack{
-                //the ability to change notes
-                
-                // Defining button actions to save as a new file
                 // This can't be placed in the generalNotesButtons because it needs access to the GeneralNotesText variable which is a binding var and can't be used in extension pages
+                // This button checks what page the user is on and displays the general note text depending on what general note page they have selected.
                 Button(action: {
-                    writeFile(Filename: "GeneralNotesText", Data: GeneralNoteText)
-                    let myData = readingFile(inputFile: "GeneralNotesText")
-                    print(myData)
+                    if selectedNotePage == "1)NotePage1"{
+                        writeFile(Filename: selectedNotePage, Data: GeneralNoteText1)
+                    }
+                    else if selectedNotePage == "2)NotePage2"{
+                        writeFile(Filename: selectedNotePage, Data: GeneralNoteText2)
+                    }
+                    else if selectedNotePage == "3)NotePage3"{
+                        writeFile(Filename: selectedNotePage, Data: GeneralNoteText3)
+                    }
+                    else if selectedNotePage == "4)NotePage4"{
+                        writeFile(Filename: selectedNotePage, Data: GeneralNoteText4)
+                    }
+                    else if selectedNotePage == "5)NotePage5"{
+                        writeFile(Filename: selectedNotePage, Data: GeneralNoteText5)
+                    }
+                    // The homepage quick launch being updated if the note page saved wasn't saved before.
+                    if RecentlyOpened1 != selectedNotePage {
+                        // The pages being equal to the previous page.
+                        RecentlyOpened3 = RecentlyOpened2
+                        RecentlyOpened2 = RecentlyOpened1
+                        // The updated page update.
+                        RecentlyOpened1 = selectedNotePage
+                        
+                        writeFile(Filename: "RecentlyOpened3", Data: RecentlyOpened3)
+                        writeFile(Filename: "RecentlyOpened2", Data: RecentlyOpened2)
+                        writeFile(Filename: "RecentlyOpened1", Data: RecentlyOpened1)
+                    }
+                    
+                    
                 }) {
                     // Adding and resizing the icon that the button will present as
                     Text("Save")
@@ -337,10 +448,19 @@ struct GENERALNOTESPAGE: View{
                     // Styling and repositioning the button
                     .buttonStyle(PlainButtonStyle())
                     .position(x:37, y:255)
+            // Defining button which allows for user to pick which general notes page they want to be on. (This also can't be a part of the buttons because it require manipulating the string text)
+            VStack {
+                Picker("", selection: $selectedNotePage) {
+                    ForEach(NotePages, id: \.self) {
+                        Text($0)
+                    }
+                }
+                .frame(width: 60, height: 60) // Adjust the size of the Picker
+                .position(x: 37, y: 330)
+            }
             }
         }
     }
-}
 
 // Creating the Sticky notes page for the application
 struct STICKYNOTEPAGE: View{
@@ -549,14 +669,25 @@ private extension ContentView{
     var HomePageButtons: some View{
         GeometryReader { geometry in
             // Creating the first button for the Home page
+            // Creating a object that serves as the button border
+            
+            Rectangle()
+                .cornerRadius(15)
+                // Defining the object size
+                .frame(width: 93, height: 93)
+                // Defining the object colour
+                .foregroundColor(.white)
+                // Defining the object position
+                .position(x:58, y:168)
+            
             // Defining the object for button background
             Rectangle()
                 .cornerRadius(15)
-            // Defining the object size
+                // Defining the object size
                 .frame(width: 90, height: 90)
-            // Defining the object colour
+                // Defining the object colour
                 .foregroundColor(Color("DarkOrange"))
-            // Defining the object position
+                // Defining the object position
                 .position(x:58, y:168)
             
             // Defining button actions to change page
@@ -733,9 +864,6 @@ private extension ContentView{
                 // Defining button actions to change note number
                 Button(action: {
                     noteNumber += 1
-                    if noteNumber >= 5 {
-                        noteNumber = 0
-                    }
                 }) {
                 // Adding and resizing the icon that the button will present as
                     Image("AddButton")
@@ -747,6 +875,33 @@ private extension ContentView{
                         // Styling and repositioning the button
                         .buttonStyle(PlainButtonStyle())
                         .position(x:38, y:235)
+                
+                
+                // Creating the button which resets how many stickies are created (The maximum amount is 5)
+                Button(action: {
+                    // Reseting the tile amount to zero so you only see the title tile
+                    noteNumber = 0
+                    // Setting the positions of the sticky notes to the position they start at before moving them.
+                    // Defining the variable for the position of all 5 sticky notes
+                    StickyPos1 = CGSize(width: 100, height: 150)
+                    StickyPos2 = CGSize(width: 100, height: 150)
+                    StickyPos3 = CGSize(width: 100, height: 150)
+                    StickyPos4 = CGSize(width: 100, height: 150)
+                    StickyPos5 = CGSize(width: 100, height: 150)
+                    
+                }) {
+                    // Adding and resizing the icon that the button will present as
+                    Text("Reset")
+                        // Resizing the icon image
+                        .frame(width: 60, height: 60)
+                        .foregroundColor(.white)
+                        .background(Color("DarkOrange"))
+                        .cornerRadius(10)
+                    }
+                    // Styling and repositioning the button
+                    .buttonStyle(PlainButtonStyle())
+                    .position(x:37, y:310)
+                
                 // Creating the button which saves the file information of the Sticky note text
                 Button(action: {
                     // Saving the files
@@ -755,18 +910,6 @@ private extension ContentView{
                     writeFile(Filename: "StickyText3", Data: StickyText3)
                     writeFile(Filename: "StickyText4", Data: StickyText4)
                     writeFile(Filename: "StickyText5", Data: StickyText5)
-                    //reading the amount of data
-                    let stickyData1 = readingFile(inputFile: "StickyText1")
-                    let stickyData2 = readingFile(inputFile: "StickyText2")
-                    let stickyData3 = readingFile(inputFile: "StickyText3")
-                    let stickyData4 = readingFile(inputFile: "StickyText4")
-                    let stickyData5 = readingFile(inputFile: "StickyText5")
-                    // Printing the amount of data added to the console
-                    print(stickyData1)
-                    print(stickyData2)
-                    print(stickyData3)
-                    print(stickyData4)
-                    print(stickyData5)
                 }) {
                     // Adding and resizing the icon that the button will present as
                     Text("Save")
@@ -778,17 +921,49 @@ private extension ContentView{
                     }
                     // Styling and repositioning the button
                     .buttonStyle(PlainButtonStyle())
-                    .position(x:37, y:310)
+                    .position(x:37, y:385)
             }
         }
     }
     // Changing the size and position of the General notes TextEditor
-    private extension ContentView{
-        var textEditorView: some View{
-            GeometryReader { geometry in
-                TextEditor(text: $GeneralNoteText)
-                    .frame(width: geometry.size.width * 0.7,height: geometry.size.height * 30)
-                    .position(x:geometry.size.width * 0.5, y:geometry.size.height * 35)
+private extension ContentView {
+    var textEditorView: some View {
+        GeometryReader { geometry in
+            // The Black rectangle which acts as a background to the main Text editor
+            Rectangle()
+                .frame(width: geometry.size.width * 0.855, height: 570)
+                .position(x: geometry.size.width * 0.54, y: 390)
+                .foregroundColor(.black)
+            // If the first Note page has been selected then display the first note page
+            if selectedNotePage == "1)NotePage1"{
+                TextEditor(text: $GeneralNoteText1)
+                    .frame(width: geometry.size.width * 0.85, height: 565)
+                    .position(x: geometry.size.width * 0.54, y: 390)
+            }
+            // If the seccond Note page has been selected then display the seccond note page
+            else if selectedNotePage == "2)NotePage2"{
+                TextEditor(text: $GeneralNoteText2)
+                    .frame(width: geometry.size.width * 0.85, height: 565)
+                    .position(x: geometry.size.width * 0.54, y: 390)
+            }
+            // If the third Note page has been selected then display the third note page
+            else if selectedNotePage == "3)NotePage3"{
+                TextEditor(text: $GeneralNoteText3)
+                    .frame(width: geometry.size.width * 0.85, height: 565)
+                    .position(x: geometry.size.width * 0.54, y: 390)
+            }
+            // If the fourth Note page has been selected then display the fourth note page
+            else if selectedNotePage == "4)NotePage4"{
+                TextEditor(text: $GeneralNoteText4)
+                    .frame(width: geometry.size.width * 0.85, height: 565)
+                    .position(x: geometry.size.width * 0.54, y: 390)
+            }
+            // If the fifth Note page has been selected then display the fifth note page
+            else if selectedNotePage == "5)NotePage5"{
+                TextEditor(text: $GeneralNoteText5)
+                    .frame(width: geometry.size.width * 0.85, height: 565)
+                    .position(x: geometry.size.width * 0.54, y: 390)
+            }
             }
         }
     }
@@ -836,9 +1011,6 @@ private extension ContentView{
             // Defining button actions to add a mind map tile
             Button(action: {
                 TileAmount += 1
-                if TileAmount >= 8 {
-                    TileAmount = 0
-                }
             }) {
             // Adding and resizing the icon that the button will present as
                 Image("AddButton")
@@ -852,9 +1024,36 @@ private extension ContentView{
                     .position(x:38, y:275)
             
             
+            // Creating the button which resets how many mind map tiles are created (The maximum amount is 7)
+            Button(action: {
+                // Reseting the tile amount to zero so you only see the title tile
+                TileAmount = 0
+                //setting the positions of the mind map tiles to the position they start at before moving them.
+                MindMapTitlePos = CGSize(width: 500, height: 500)
+                MindMapPos1 = CGSize(width: 300, height: 300)
+                MindMapPos2 = CGSize(width: 500, height: 300)
+                MindMapPos3 = CGSize(width: 700, height: 300)
+                MindMapPos4 = CGSize(width: 900, height: 300)
+                MindMapPos5 = CGSize(width: 300, height: 600)
+                MindMapPos6 = CGSize(width: 500, height: 600)
+                MindMapPos7 = CGSize(width: 700, height: 600)
+                
+            }) {
+                // Adding and resizing the icon that the button will present as
+                Text("Reset")
+                    // Resizing the icon image
+                    .frame(width: 60, height: 60)
+                    .foregroundColor(.white)
+                    .background(Color("DarkOrange"))
+                    .cornerRadius(10)
+                }
+                // Styling and repositioning the button
+                .buttonStyle(PlainButtonStyle())
+                .position(x:37, y:350)
+            
             // Creating the button which saves the file information of the mind map text
             Button(action: {
-                // Saving the files😁
+                // Saving the files 😁
                 writeFile(Filename: "MindMapTitle", Data: MindMapTitleStr)
                 writeFile(Filename: "MindMapStr1", Data: MindMapStr1)
                 writeFile(Filename: "MindMapStr2", Data: MindMapStr2)
@@ -874,7 +1073,7 @@ private extension ContentView{
                 }
                 // Styling and repositioning the button
                 .buttonStyle(PlainButtonStyle())
-                .position(x:37, y:350)
+                .position(x:37, y:425)
         }
     }
 }
@@ -930,7 +1129,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 125)
+                    .frame(width: 200, height: 100)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos1)
@@ -954,26 +1153,12 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr1)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(x:MindMapPos1.width, y:MindMapPos1.height - 12.5)
+                    .offset(x:MindMapPos1.width, y:MindMapPos1.height)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
                 
-                // Defining button actions add mindmap tiles
-                Button(action: {
-                    TileAmount += 1
-                }) {
-                // Adding and resizing the icon that the button will present as
-                    Image("AddButton")
-                    // Resizing the icon image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    }
-                        // Styling and repositioning the button
-                        .buttonStyle(PlainButtonStyle())
-                        .offset(x:MindMapPos1.width, y:MindMapPos1.height + 45)
             }
         }
     }
@@ -987,7 +1172,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 125)
+                    .frame(width: 200, height: 100)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos2)
@@ -1011,26 +1196,11 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr2)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(x:MindMapPos2.width, y:MindMapPos2.height - 12.5)
+                    .offset(x:MindMapPos2.width, y:MindMapPos2.height)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
-                
-                // Defining button actions add mindmap tiles
-                Button(action: {
-                    TileAmount += 1
-                }) {
-                // Adding and resizing the icon that the button will present as
-                    Image("AddButton")
-                    // Resizing the icon image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    }
-                        // Styling and repositioning the button
-                        .buttonStyle(PlainButtonStyle())
-                        .offset(x:MindMapPos2.width, y:MindMapPos2.height + 45)
             }
         }
     }
@@ -1044,7 +1214,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 125)
+                    .frame(width: 200, height: 100)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos3)
@@ -1068,26 +1238,11 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr3)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(x:MindMapPos3.width, y:MindMapPos3.height - 12.5)
+                    .offset(x:MindMapPos3.width, y:MindMapPos3.height)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
-                
-                // Defining button actions add mindmap tiles
-                Button(action: {
-                    TileAmount += 1
-                }) {
-                // Adding and resizing the icon that the button will present as
-                    Image("AddButton")
-                    // Resizing the icon image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    }
-                        // Styling and repositioning the button
-                        .buttonStyle(PlainButtonStyle())
-                        .offset(x:MindMapPos3.width, y:MindMapPos3.height + 45)
             }
         }
     }
@@ -1101,7 +1256,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 125)
+                    .frame(width: 200, height: 100)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos4)
@@ -1125,26 +1280,11 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr4)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(x:MindMapPos4.width, y:MindMapPos4.height - 12.5)
+                    .offset(x:MindMapPos4.width, y:MindMapPos4.height)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
-                
-                // Defining button actions add mindmap tiles
-                Button(action: {
-                    TileAmount += 1
-                }) {
-                // Adding and resizing the icon that the button will present as
-                    Image("AddButton")
-                    // Resizing the icon image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    }
-                        // Styling and repositioning the button
-                        .buttonStyle(PlainButtonStyle())
-                        .offset(x:MindMapPos4.width, y:MindMapPos4.height + 45)
             }
         }
     }
@@ -1158,7 +1298,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 125)
+                    .frame(width: 200, height: 100)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos5)
@@ -1182,26 +1322,11 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr5)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(x:MindMapPos5.width, y:MindMapPos5.height - 12.5)
+                    .offset(x:MindMapPos5.width, y:MindMapPos5.height)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
-                
-                // Defining button actions add mindmap tiles
-                Button(action: {
-                    TileAmount += 1
-                }) {
-                // Adding and resizing the icon that the button will present as
-                    Image("AddButton")
-                    // Resizing the icon image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    }
-                        // Styling and repositioning the button
-                        .buttonStyle(PlainButtonStyle())
-                        .offset(x:MindMapPos5.width, y:MindMapPos5.height + 45)
             }
         }
     }
@@ -1215,7 +1340,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 125)
+                    .frame(width: 200, height: 100)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos6)
@@ -1239,26 +1364,11 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr6)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(x:MindMapPos6.width, y:MindMapPos6.height - 12.5)
+                    .offset(x:MindMapPos6.width, y:MindMapPos6.height)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
-                
-                // Defining button actions add mindmap tiles
-                Button(action: {
-                    TileAmount += 1
-                }) {
-                // Adding and resizing the icon that the button will present as
-                    Image("AddButton")
-                    // Resizing the icon image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    }
-                        // Styling and repositioning the button
-                        .buttonStyle(PlainButtonStyle())
-                        .offset(x:MindMapPos6.width, y:MindMapPos6.height + 45)
             }
         }
     }
@@ -1272,7 +1382,7 @@ private extension ContentView{
                 // The rounded rectangle background
                 RoundedRectangle(cornerRadius: 10)
                     // Its size and color
-                    .frame(width: 200, height: 125)
+                    .frame(width: 200, height: 100)
                     .foregroundColor(Color("MindMapTileOutline"))
                     // Its position is equal to the offset of the drag geasture.
                     .offset(MindMapPos7)
@@ -1296,26 +1406,110 @@ private extension ContentView{
                 TextEditor(text: $MindMapStr7)
                     // Defining the note's size and position
                     .frame(width: 180,height:80)
-                    .offset(x:MindMapPos7.width, y:MindMapPos7.height - 12.5)
+                    .offset(x:MindMapPos7.width, y:MindMapPos7.height)
                     // Centering the text in the title
                     .multilineTextAlignment(.center)
                     // Changing the color for mind map text square
                     .colorMultiply(Color("MindMapTile"))
+            }
+        }
+    }
+}
+// The home page extension which has all three of the quick launch options
+private extension ContentView{
+    var homepageRecentPage1: some View{
+        GeometryReader { geometry in
+            ZStack{
+                // The first quick load page on the home page
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(width: geometry.size.width * 0.2, height: 530)
+                    .position(x: geometry.size.width * 0.315, y: 462.5)
+                    .foregroundColor(.white)
+                // The text which appears in the first white box on the home page
+                Text(readingFile(inputFile: RecentlyOpened1))
+                    .background(.white)
+                    .cornerRadius(10)
+                    .foregroundColor(.black)
+                    .frame(width: geometry.size.width * 0.18, height: 515)
+                    .position(x: geometry.size.width * 0.315, y: 462.5)
                 
-                // Defining button actions add mindmap tiles
+                // Creating the button which loads up the first quick load page.
                 Button(action: {
-                    TileAmount += 1
+                    selectedNotePage = RecentlyOpened1
+                    currentPage = 1
                 }) {
-                // Adding and resizing the icon that the button will present as
-                    Image("AddButton")
-                    // Resizing the icon image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
+                    // Adding and resizing the icon that the button will present as
+                    Text("Open")
+                        // Resizing the icon image
+                        .frame(width: 60, height: 15)
+                        .foregroundColor(.white)
+                        .background(Color("DarkOrange"))
+                        .cornerRadius(10)
                     }
-                        // Styling and repositioning the button
-                        .buttonStyle(PlainButtonStyle())
-                        .offset(x:MindMapPos7.width, y:MindMapPos7.height + 45)
+                    // Styling and repositioning the button
+                    .buttonStyle(PlainButtonStyle())
+                    .position(x: geometry.size.width * 0.315, y: 737)
+                
+                // The seccond quick load page on the home page
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(width: geometry.size.width * 0.2, height: 530)
+                    .position(x: geometry.size.width * 0.54, y: 462.5)
+                    .foregroundColor(.white)
+                // The text which appears in the seccond white box on the home page
+                Text(readingFile(inputFile: RecentlyOpened2))
+                    .background(.white)
+                    .cornerRadius(10)
+                    .foregroundColor(.black)
+                    .frame(width: geometry.size.width * 0.18, height: 515)
+                    .position(x: geometry.size.width * 0.54, y: 462.5)
+                
+                // Creating the button which loads up the seccond quick load page.
+                Button(action: {
+                    selectedNotePage = RecentlyOpened2
+                    currentPage = 1
+                }) {
+                    // Adding and resizing the icon that the button will present as
+                    Text("Open")
+                        // Resizing the icon image
+                        .frame(width: 60, height: 15)
+                        .foregroundColor(.white)
+                        .background(Color("DarkOrange"))
+                        .cornerRadius(10)
+                    }
+                    // Styling and repositioning the button
+                    .buttonStyle(PlainButtonStyle())
+                    .position(x: geometry.size.width * 0.54, y: 737)
+                
+                // The third quick load page on the home page
+                
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(width: geometry.size.width * 0.2, height: 530)
+                    .position(x: geometry.size.width * 0.765, y: 462.5)
+                    .foregroundColor(.white)
+                // The text which appears in the third white box on the home page
+                Text(readingFile(inputFile: RecentlyOpened3))
+                    .background(.white)
+                    .cornerRadius(10)
+                    .foregroundColor(.black)
+                    .frame(width: geometry.size.width * 0.18, height: 515)
+                    .position(x: geometry.size.width * 0.765, y: 475)
+                
+                // Creating the button which loads up the third quick load page.
+                Button(action: {
+                    selectedNotePage = RecentlyOpened3
+                    currentPage = 1
+                }) {
+                    // Adding and resizing the icon that the button will present as
+                    Text("Open")
+                        // Resizing the icon image
+                        .frame(width: 60, height: 15)
+                        .foregroundColor(.white)
+                        .background(Color("DarkOrange"))
+                        .cornerRadius(10)
+                    }
+                    // Styling and repositioning the button
+                    .buttonStyle(PlainButtonStyle())
+                    .position(x: geometry.size.width * 0.765, y: 737)
             }
         }
     }
@@ -1382,7 +1576,7 @@ private extension ContentView{
                     .foregroundColor(.white)
                     .cornerRadius(8)
                 // Changing the position of the button
-                    .position(x: geometry.size.width*0.955, y: geometry.size.height*64)
+                    .position(x: geometry.size.width*0.955, y: 22)
             }
         }
     }
